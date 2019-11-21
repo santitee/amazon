@@ -1,8 +1,24 @@
 const express = require("express");
 const morgan = require("morgan");
 const bodyParser = require("body-parser");
+const mongoose = require("mongoose");
+const dotenv = require("dotenv").config();
 
-const app = express()
+const User = require("./models/user");
+
+const app = express();
+
+mongoose.connect(
+    process.env.DATABASE, 
+    { useUnifiedTopology: true },
+    (err) => {
+        if (err) {
+            console.log(err);
+        } else {
+            console.log("Connected to the database");
+        }
+    }
+);
 
 //Middlewares
 app.use(morgan('dev'));
@@ -16,8 +32,19 @@ app.get("/",  (req, res) => {
 
 // POST - send data frome frontend to backend
 app.post("/", (req, res) => {
-    console.log(req.body.name);
-})
+    let user = new User();
+    user.name = req.body.name;
+    user.email = req.body.email;
+    user.password = req.body.password;
+
+    user.save(err => {
+        if (err) {
+            res.json(err);
+        } else {
+            res.json("successfully saved");
+        }
+    });
+});
 
 app.listen(3000, err => {
     if (err) {
