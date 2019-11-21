@@ -12,7 +12,7 @@ app.use(bodyParser.urlencoded({ extended: false}));
 // Get - Retrieve data from server
 app.get("/",  (req, res) => {
     res.json("Hello amazon clone");
-});
+ });
 
 // POST - send data frome frontend to backend
 app.post("/", (req, res) => {
